@@ -12,6 +12,7 @@ const Profile = () => {
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
+  const [imgError, setImgError] = useState(false);
 
   const fetchProfile = async () => {
     try {
@@ -91,16 +92,14 @@ const Profile = () => {
               <div className="w-28 h-28 rounded-full mb-4 overflow-hidden bg-gray-200 flex items-center justify-center">
                 {profile?.image_url ? (
                   <img
-                    src={`http://localhost:3000/${profile.image_url}`}
+                    src={
+                      imgError
+                        ? "/fallback-avatar.png"
+                        : `http://localhost:3000/${profile.image_url}`
+                    }
                     alt="avatar"
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = "/fallback-avatar.png"; // fallback kalau image gagal load
-                      console.log(
-                        "Avatar URL:",
-                        `http://localhost:3000/${profile.image_url}`
-                      );
-                    }}
+                    onError={() => setImgError(true)}
                   />
                 ) : (
                   <span className="text-3xl">👤</span> // fallback emoji kalau user tidak ada foto
@@ -109,7 +108,7 @@ const Profile = () => {
 
               <h3 className="font-semibold text-lg">{profile?.name || "-"}</h3>
               <p className="text-sm text-gray-500 mb-6">
-                @{profile?.username || "-"}
+                {profile?.role || "-"}
               </p>
 
               <button
