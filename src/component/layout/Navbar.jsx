@@ -7,6 +7,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -70,12 +71,14 @@ const Navbar = () => {
           <div className="w-9 h-9 rounded-full bg-gray-300 overflow-hidden flex items-center justify-center">
             {user?.image_url ? (
               <img
-                src={`http://localhost:3000/${user.image_url}`}
+                src={
+                  imgError
+                    ? "/fallback-avatar.png"
+                    : `http://localhost:3000/${user.image_url}`
+                }
                 alt="avatar"
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = "/fallback-avatar.png";
-                }}
+                onError={() => setImgError(true)}
               />
             ) : (
               <UserIcon className="w-5 h-5 text-white" />
